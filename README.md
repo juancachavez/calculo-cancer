@@ -5,7 +5,7 @@ Esta es una herramienta educativa e interactiva de salud preventiva desarrollada
 ![Interfaz de la calculadora de riesgo](calculadora.png)
 
 Disponible para su uso en:
-**[https://juancachavez.github.io/calculadora-vida/](https://juancachavez.github.io/calculo-cancer/)**
+**[https://juancachavez.github.io/calculo-cancer/](https://juancachavez.github.io/calculo-cancer/)**
 
 ---
 
