@@ -1,4 +1,4 @@
-/* Cálculo de Riesgo de Cáncer y Longevidad — versión vanilla JS */
+/* Cálculo de Riesgo de Cáncer y Longevidad — versión vanilla JS con Compartición de Imagen nativa (Corregido) */
 (function () {
   "use strict";
 
@@ -144,17 +144,58 @@
   let answers = {};
   let showTransition = false;
   let showResults = false;
+  let showShare = false;
   let edadInput = "";
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function(c){
     return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
   });}
 
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (window.html2canvas) return resolve();
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
   function render() {
     const total = QUESTIONS.length;
     const isReady = step === total;
     const q = isReady ? null : QUESTIONS[step];
     const progress = Math.round(((isReady ? total : step) / total) * 100);
+
+    // Mostrar/ocultar header y footer según el modo "compartir limpio"
+    document.body.classList.toggle("onc-share-mode", showShare);
+
+    if (showShare) {
+      const r = calcular(answers);
+      const mejoras = puntosMejora(answers);
+      const mejorasHtml = mejoras.length === 0
+        ? '<p class="onc-mejoras-empty">¡Excelente! No detectamos hábitos críticos que estén reduciendo tu expectativa de vida.</p>'
+        : '<ul>' + mejoras.map(function(m){return '<li>'+esc(m)+'</li>';}).join('') + '</ul>';
+
+      root.innerHTML =
+        '<button type="button" class="onc-share-close" id="btn-share-close" aria-label="Volver a comenzar">&times;</button>' +
+        '<section class="onc-results onc-results--share">' +
+          '<div class="onc-years-block">' +
+            '<span class="onc-years-line1">Vivirás</span>' +
+            '<span class="onc-years-line2">'+r.aniosRestantes+'</span>' +
+            '<span class="onc-years-line3">años</span>' +
+          '</div>' +
+          '<div class="onc-risk onc-risk--'+r.nivel.toLowerCase()+'">' +
+            '<p class="onc-risk-text">Tu probabilidad de cáncer es <strong>'+r.nivel+'</strong>.</p>' +
+          '</div>' +
+          '<div class="onc-mejoras"><h3>Puntos de mejora</h3>'+mejorasHtml+'</div>' +
+        '</section>';
+
+      document.getElementById("btn-share-close").addEventListener("click", reset);
+      return;
+    }
+
 
     if (showTransition) {
       root.innerHTML =
@@ -270,7 +311,7 @@
   }
 
   function reset() {
-    answers = {}; step = 0; showTransition = false; showResults = false; edadInput = "";
+    answers = {}; step = 0; showTransition = false; showResults = false; showShare = false; edadInput = "";
     render();
   }
 
@@ -279,16 +320,10 @@
     setTimeout(function(){ showTransition = false; showResults = true; render(); }, 2200);
   }
 
-  async function handleShare() {
-    const shareData = {
-      title: "Si no me amo, ¿quién me ama? — Fundación Edificando Vidas",
-      text: "Cuidar de nuestra salud es el mayor acto de amor propio. Acabo de evaluar mis hábitos y mi riesgo de cáncer de forma preventiva con la calculadora de la Fundación Edificando Vidas. Mide tu longevidad y empieza a cuidarte hoy. 🎗️💙",
-      url: location.href
-    };
-    try {
-      if (navigator.share) { await navigator.share(shareData); }
-      else { await navigator.clipboard.writeText(shareData.text + " " + shareData.url); alert("Mensaje copiado al portapapeles."); }
-    } catch (err) { console.error("share failed", err); }
+  function handleShare() {
+    showShare = true;
+    window.scrollTo(0, 0);
+    render();
   }
 
   render();

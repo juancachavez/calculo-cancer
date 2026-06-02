@@ -149,3 +149,22 @@ html, body { margin: 0; padding: 0; }
   .onc-number-form { flex-direction: column; }
   .onc-btn-primary { padding: .85rem; }
 }
+
+/* ===== Modo "Compartir limpio" ===== */
+body.onc-share-mode .onc-header,
+body.onc-share-mode .onc-footer { display: none !important; }
+body.onc-share-mode .onc-app { padding-top: 4.5rem; }
+
+.onc-share-close {
+  position: fixed; top: 1rem; right: 1rem;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(0,0,0,.18); border: 2px solid #fff; color: #fff;
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: inherit; font-weight: 400; padding: 0;
+  transition: background .15s ease, transform .15s ease;
+  z-index: 50;
+}
+.onc-share-close:hover { background: rgba(0,0,0,.32); transform: scale(1.05); }
+
+.onc-results--share { max-width: 640px; margin: 0 auto; }
