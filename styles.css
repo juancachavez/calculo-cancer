@@ -17,7 +17,7 @@ html, body { margin: 0; padding: 0; }
 .onc-btn-primary, .onc-btn-results, .onc-option.is-selected { color: #fff !important; }
 
 .onc-header { text-align: center; max-width: 720px; margin-bottom: 2rem; }
-.onc-logo { display: block; margin: 0 auto 1rem; max-width: 280px; width: 100%; height: auto; }
+.onc-logo { display: block; margin: 0 auto 1rem; max-width: 48px; width: 100%; height: auto; }
 .onc-header h1 { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 700; margin: 0; letter-spacing: -.01em; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.18); }
 
 .onc-card-wrap { width: 100%; max-width: 640px; }
